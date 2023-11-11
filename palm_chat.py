@@ -34,11 +34,13 @@ examples = [
 # read conversation history from file in bytes
 
 def chat_response(user_input):
-    with open("conversation_history.dat", "rb") as file:
-        if file.read() == b'':
-            conversation_history = []
-        else:
-            conversation_history = file.read()
+    try:
+        with open("conversation_history.dat", 'rb') as file:
+            conversation_history = pickle.load(file)
+    
+    except (EOFError, FileNotFoundError):
+        # Handle the case where the file is not found or is empty
+        conversation_history=[]
         
     if user_input.lower() == 'exit':
         print("Goodbye!")
@@ -65,7 +67,7 @@ def chat_response(user_input):
 
     # Write conversation history to file
     with open("conversation_history.dat", "wb") as file:
-        obj=pickle.dump(conversation_history, file)
+        pickle.dump(conversation_history, file)
     return response.last   
 
 chat_response(user_input)
