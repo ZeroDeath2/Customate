@@ -2,8 +2,6 @@ import google.generativeai as palm
 
 palm.configure(api_key="AIzaSyDwzwzZMr0JBpsO-Lg6NgfG9ak0Ta-Lxwc") 
 
-#models = [m for m in palm.list_models() if "generateText" in m.supported_generation_methods]
-
 model = "models/chat-bison-001"
 
 # Context and examples from the first code
@@ -14,7 +12,6 @@ context = '''As a customer care agent for a leading TV company in a busy call ce
     company's values, emphasizing reliability and customer satisfaction. Ensure the customer 
     feels heard and valued throughout the conversation. Strive to provide clear solutions and 
     make them feel supported, fostering a positive image of the company's commitment to exceptional customer service'''
-
 
 examples = [
     [
@@ -33,13 +30,12 @@ examples = [
 
 # Initialize conversation history 
 conversation_history = []
-
-
-while True:
-    user_input = input("User: ")
+def chat_response(user_input):
+    
+        
     if user_input.lower() == 'exit':
         print("Goodbye!")
-        break
+        pass
 
     # Append user input to conversation history
     conversation_history.append(f"User: {user_input}")
@@ -59,3 +55,5 @@ while True:
 
     # Append AI response to conversation history
     conversation_history.append(f"Model: {response.last}")
+
+#chat_response("Hello, tell me a very long story.")
