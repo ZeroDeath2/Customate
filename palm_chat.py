@@ -1,7 +1,10 @@
 import google.generativeai as palm
-
+import sys
+import pickle
 palm.configure(api_key="AIzaSyDwzwzZMr0JBpsO-Lg6NgfG9ak0Ta-Lxwc") 
 
+#extract user_input as args from command line
+user_input = sys.argv[1]
 model = "models/chat-bison-001"
 
 # Context and examples from the first code
@@ -28,10 +31,14 @@ examples = [
     ]
 ]
 
-# Initialize conversation history 
-conversation_history = []
+# read conversation history from file in bytes
+
 def chat_response(user_input):
-    
+    with open("conversation_history.dat", "rb") as file:
+        if file.read() == b'':
+            conversation_history = []
+        else:
+            conversation_history = file.read()
         
     if user_input.lower() == 'exit':
         print("Goodbye!")
@@ -56,4 +63,9 @@ def chat_response(user_input):
     # Append AI response to conversation history
     conversation_history.append(f"Model: {response.last}")
 
-#chat_response("Hello, tell me a very long story.")
+    # Write conversation history to file
+    with open("conversation_history.dat", "wb") as file:
+        obj=pickle.dump(conversation_history, file)
+    return response.last   
+
+chat_response(user_input)
