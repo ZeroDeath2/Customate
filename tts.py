@@ -9,7 +9,7 @@ import subprocess
 
 # Define API keys and voice ID
 OPENAI_API_KEY = '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'
-ELEVENLABS_API_KEY = '55ae157db19cd5ad2ac8c3cc24132c32'
+ELEVENLABS_API_KEY = 'a67ccac97e3225c39b7e6a444f68357d'
 VOICE_ID = '21m00Tcm4TlvDq8ikWAM'
 
 # Set OpenAI API key
@@ -72,7 +72,7 @@ async def text_to_speech_input_streaming(voice_id, text_iterator):
             "text": " ",
             "voice_settings": {"stability": 0.5, "similarity_boost": True},
             "xi_api_key": ELEVENLABS_API_KEY,
-        }))
+        }))                         
 
         async def listen():
             """Listen to the websocket for audio data and stream it."""
@@ -101,7 +101,13 @@ async def text_to_speech_input_streaming(voice_id, text_iterator):
 async def chat_completion(query):
     """Retrieve text from OpenAI and pass it to the text-to-speech function."""
     response = await openai.ChatCompletion.acreate(
-        model='gpt-3.5-turbo', messages=[{'role': 'user', 'content': query}],
+        model='gpt-3.5-turbo', 
+        max_tokens=150,
+        messages=[
+
+            {'role': 'user', 'content': query}
+            
+        ],
         temperature=1, stream=True
     )
 
@@ -115,8 +121,7 @@ async def chat_completion(query):
 
     await text_to_speech_input_streaming(VOICE_ID, text_iterator())
 
-def main():
-    user_query = "Hello, tell me a story in 20 words."
+def main(user_query):   
     asyncio.run(chat_completion(user_query))
-main()
 
+   
